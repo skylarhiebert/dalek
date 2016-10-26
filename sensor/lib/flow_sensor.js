@@ -84,9 +84,9 @@ function check(data, callback){
     if( !state.pouring && Date.now() - state.pourEnd > 3000) {
       state.millis += milliliters(state.count);
       state.count = 0;
+      callback(states);
     }
   });
-  callback(states);
 }
 
 module.exports = {
