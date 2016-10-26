@@ -27,7 +27,7 @@ if( defaults.mock_flow ){
             // Old State was not pouring
             states[id].pourStart = Date.now();
         }
-        states[id].pouring = true;
+        states[id].pouring = (c != states[id].count);
         states[id].pourChange = Date.now();
         states[id].pourDelta = states[id].pourChange - states[id].lastPourChange;
         if(states[id].pourDelta < 1000) {
@@ -39,10 +39,6 @@ if( defaults.mock_flow ){
     }
   }
 
-  function calculate_hertz(c, id) {
-    if(states[id].pouring && )
-  }
-  
   sensor0.watch(function(err, value) {
     if (err) exit();
     if( value ){
