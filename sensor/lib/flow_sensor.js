@@ -9,8 +9,13 @@ var dcapi = require('../lib/wt_dcapi'),
     defaults = require('./defaults');
 
 function collect(data){
-    data.payload = JSON.stringify(data);
-    dcapi.send(data, function(resp){
+    payload = { "id": data.id, 
+                "color": data.color, 
+                "pourVolumeMl": data.millis, 
+                "pourDurationMs": data.pourEnd - data.pourStart, 
+                "beverage": "placeholder" }
+    payload.fullstate = JSON.stringify(data);
+    dcapi.send(payload, function(resp){
         console.log(resp.code + " : "+resp.raw.toString('base64'));
     });
 }
@@ -39,6 +44,7 @@ if( defaults.mock_flow ){
 
     if(states[id].pouring) {
         if(states[id].pouring != states[id].lastPourState) {
+            states[id].pourStart = Date.now();
             states[id].pourSent = false;
         }
         states[id].pourEnd = Date.now();
@@ -97,7 +103,7 @@ function check(data, callback){
 
   states.forEach( function(state){
     if( !state.pouring && Date.now() - state.pourEnd > 3000 && !state.pourSent) {
-      state.millis += milliliters(state.count);
+      state.millis = milliliters(state.count);
       state.count = 0;
       state.pourSent = true;
 
