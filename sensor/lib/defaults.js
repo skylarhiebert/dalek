@@ -9,21 +9,48 @@ var states = [
     color: "orange",
     count: 0,
     millis: 0,
-    pouring: false
+    pouring: false,
+    lastPourState: false,
+    lastPourChange: Date.now(),
+    pourStart: 0,
+    pourChange: lastPourChange,
+    pourDelta: 0,
+    hertz: 0,
+    flow: 0,
+    litersPoured: 0,
+    pintsPoured:0
   },
   {
     id: sensor_1_gpio,
     color: "green",
     count: 0,
     millis: 0,
-    pouring: false
+    pouring: false,
+    lastPourState: false,
+    lastPourChange: Date.now(),
+    pourStart: 0,
+    pourChange: lastPourChange,
+    pourDelta: 0,
+    hertz: 0,
+    flow: 0,
+    litersPoured: 0,
+    pintsPoured:0   
   },
   {
     id: sensor_2_gpio,
     color: "yellow",
     count: 0,
     millis: 0,
-    pouring: false
+    pouring: false,
+    lastPourState: false,
+    lastPourChange: Date.now(),
+    pourStart: 0,
+    pourChange: lastPourChange,
+    pourDelta: 0,
+    hertz: 0,
+    flow: 0,
+    litersPoured: 0,
+    pintsPoured:0
   }
 ];
 
