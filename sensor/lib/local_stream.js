@@ -88,9 +88,6 @@ function cache_get(callback){
 function run_iteration(dd) {
       flow.check(dd, function(data){
 
-        if( !local_only )
-            collect(data);
-
         cache.update(data, function(d){
             console.log(JSON.stringify(d,null,'  '));
             stream.trigger(d);

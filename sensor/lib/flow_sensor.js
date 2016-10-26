@@ -3,6 +3,16 @@ var defaults = require('./defaults'),
 
 var states = defaults.states;
 
+var dcapi = require('../lib/wt_dcapi'),
+    _ = require('lodash'),
+    defaults = require('./defaults');
+
+function collect(data){
+    dcapi.send({payload: JSON.stringify(data)}, function(resp){
+        console.log(resp.code + " : "+resp.raw.toString('base64'));
+    });
+}
+
 if( defaults.mock_flow ){
   function pouring_mock(c){
     count = [c,c*.75,c*.125];
@@ -84,9 +94,12 @@ function check(data, callback){
     if( !state.pouring && Date.now() - state.pourEnd > 3000) {
       state.millis += milliliters(state.count);
       state.count = 0;
-      callback(states);
+
+      if( !local_only )
+          collect(data);
     }
   });
+  callback(states);
 }
 
 module.exports = {
