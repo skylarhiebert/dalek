@@ -22,7 +22,16 @@ if( defaults.mock_flow ){
       sensor2 = new Gpio(states[2].id, 'in', 'both');
 
   function pouring_check(c,id){
+    states[id].lastPourState = states[id].pouring;
     states[id].pouring = (c != states[id].count);
+
+    if(states[id].pouring) {
+        states[id].pourEnd = Date.now();
+    } else {
+        if(states[id].pouring != states[id].lastPourState) {
+            states[id].pourEnd = Date.now();
+        }
+    }
   }
   
   sensor0.watch(function(err, value) {
@@ -72,7 +81,7 @@ function init(s){
 function check(data, callback){
 
   states.forEach( function(state){
-    if( !state.pouring ) {
+    if( !state.pouring && Date.now() - state.pourEnd > 3000) {
       state.millis += milliliters(state.count);
       state.count = 0;
     }
