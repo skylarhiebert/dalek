@@ -1,7 +1,8 @@
 var defaults = require('./defaults'),
     _ = require('lodash');
 
-var states = defaults.states;
+var states = defaults.states,
+    local_only = true;
 
 var dcapi = require('../lib/wt_dcapi'),
     _ = require('lodash'),
