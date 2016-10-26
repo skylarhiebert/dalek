@@ -2,7 +2,7 @@ var defaults = require('./defaults'),
     _ = require('lodash');
 
 var states = defaults.states,
-    local_only = true;
+    local_only = false;
 
 var dcapi = require('../lib/wt_dcapi'),
     _ = require('lodash'),
@@ -37,6 +37,9 @@ if( defaults.mock_flow ){
     states[id].pouring = (c != states[id].count);
 
     if(states[id].pouring) {
+        if(states[id].pouring != states[id].lastPourState) {
+            states[id].pourSent = false;
+        }
         states[id].pourEnd = Date.now();
     } else {
         if(states[id].pouring != states[id].lastPourState) {
@@ -92,9 +95,10 @@ function init(s){
 function check(data, callback){
 
   states.forEach( function(state){
-    if( !state.pouring && Date.now() - state.pourEnd > 3000) {
+    if( !state.pouring && Date.now() - state.pourEnd > 3000 && !state.pourSent) {
       state.millis += milliliters(state.count);
       state.count = 0;
+      state.pourSent = true;
 
       if( !local_only )
           collect(data);
