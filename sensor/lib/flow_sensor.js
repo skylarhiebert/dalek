@@ -9,7 +9,8 @@ var dcapi = require('../lib/wt_dcapi'),
     defaults = require('./defaults');
 
 function collect(data){
-    dcapi.send({payload: JSON.stringify(data)}, function(resp){
+    data.payload = JSON.stringify(data);
+    dcapi.send(data, function(resp){
         console.log(resp.code + " : "+resp.raw.toString('base64'));
     });
 }
@@ -101,7 +102,7 @@ function check(data, callback){
       state.pourSent = true;
 
       if( !local_only )
-          collect(data);
+          collect(state);
     }
   });
   callback(states);
