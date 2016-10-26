@@ -22,21 +22,32 @@ if( defaults.mock_flow ){
       sensor2 = new Gpio(states[2].id, 'in', 'both');
 
   function pouring_check(c,id){
-    if(c != states[id].count) { // Pin State change to Pouring
+    currentTime = Date.now();
+    if(states[id].lastPourState != states[id].pouring && c != states[id].count) {
         if(!states[id].pouring) {
             // Old State was not pouring
-            states[id].pourStart = Date.now();
+            states[id].pourStart = currentTime;
         }
-        states[id].pouring = (c != states[id].count);
-        states[id].pourChange = Date.now();
+        states[id].pouring = true
+        states[id].pourChange = currentTime;
         states[id].pourDelta = states[id].pourChange - states[id].lastPourChange;
         if(states[id].pourDelta < 1000) {
             states[id].hertz = 1000.0 / states[id].pourDelta
             states[id].flow = states[id].hertz / (60 * 7.5) // Liters/second
             states[id].litersPoured += flow  * (states[id].pourDelta / 1000.0)
-            states[id].pintsPourds = states[id].litersPoured * 2.11338
+            states[id].pintsPoured = states[id].litersPoured * 2.11338
         }
     }
+
+    if(states[id].pouring && states[id].pouring == states[id].lastPourState && (currentTime - states[id].lastPourChange) > 3000) {
+        states[id].pouring = false;
+        if(states[id].pintsPoured > 0.1) {
+            states[id].pourTime = currentTime - 3000 // 3 seconds delay
+        }
+    }
+
+    states[id].lastPourState = states[id].pouring;
+    states[id].lastPourChange = states[id].pourChange;
   }
 
   sensor0.watch(function(err, value) {
